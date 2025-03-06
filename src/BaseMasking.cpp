@@ -1,11 +1,13 @@
+// copyright 2025 Yanghaoyang
 #include "BaseMasking.h"
 
-BaseMasking::BaseMasking(){
-    maskName="BaseMasking";
-}
+#include <string>
 
-BaseMasking::~BaseMasking(){}
+BaseMasking::BaseMasking() { maskName = "BaseMasking"; }
 
-std::string BaseMasking::mask(int startPosition, int length, std::string &information){
-    return information;
+BaseMasking::~BaseMasking() {}
+
+std::string BaseMasking::mask(int startPosition, int length,
+                              const std::string &information) {
+  return information;
 }

@@ -1,45 +1,60 @@
 [
     {
-        "DataBaseName":"bisheInformation",
-        "tables":[
+        "DataBaseName": "bisheInformation",
+        "tables": [
             {
-                "tableName":"player",
-                "fields":[
+                "tableName": "player",
+                "fields": [
                     {
-                        "fieldName":"pphone",
-                        "mask":"StarMasking",
-                        "parameter":[3,4]
+                        "fieldName": "pphone",
+                        "mask": "StarMasking",
+                        "parameter": [
+                            3,
+                            4
+                        ]
                     },
                     {
-                        "fieldName":"pname",
-                        "mask":"NoMasking"
+                        "fieldName": "pname",
+                        "mask": "NoMasking"
                     },
                     {
-                        "fieldName":"pid",
-                        "mask":"NoMasking"
+                        "fieldName": "pid",
+                        "mask": "NoMasking"
                     },
                     {
-                        "fieldName":"paddress",
-                        "mask":"AddressMasking",
-                        "parameter":[1]
+                        "fieldName": "paddress",
+                        "mask": "AddressMasking",
+                        "parameter": [
+                            1
+                        ]
+                    },
+                    {
+                        "fieldName": "pemail",
+                        "mask": "EmailMasking",
+                        "parameter": [
+                            "@"
+                        ]
                     }
                 ]
             },
             {
-                "tableName":"emergencyContactTable",
-                "fields":[
+                "tableName": "emergencyContactTable",
+                "fields": [
                     {
-                        "fieldName":"emergencyPhone",
-                        "mask":"StarMasking",
-                        "parameter":[3,4]
+                        "fieldName": "emergencyPhone",
+                        "mask": "StarMasking",
+                        "parameter": [
+                            3,
+                            4
+                        ]
                     },
                     {
-                        "fieldName":"empid",
-                        "mask":"NoMasking"
+                        "fieldName": "empid",
+                        "mask": "NoMasking"
                     },
                     {
-                        "fieldName":"pid",
-                        "mask":"NoMasking"
+                        "fieldName": "pid",
+                        "mask": "NoMasking"
                     }
                 ]
             }

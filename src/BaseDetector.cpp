@@ -1,26 +1,18 @@
+// copyright 2025 Yanghaoyang
 #include "BaseDetector.h"
 
-BaseDetector::BaseDetector():enable(true),sensitivePosition(-1),sensitiveLength(-1){}
+#include <string>
 
-BaseDetector::~BaseDetector(){
-    
-}
+BaseDetector::BaseDetector()
+    : enable(true), sensitivePosition(-1), sensitiveLength(-1) {}
 
-void BaseDetector::setEnable(bool e){
-    enable = e;
-}
-bool BaseDetector::getEnable(){
-    return enable;
-}
+BaseDetector::~BaseDetector() {}
 
-std::string BaseDetector::getName(){
-    return detectorName;
-}
+void BaseDetector::setEnable(bool e) { enable = e; }
+bool BaseDetector::getEnable() { return enable; }
 
-int BaseDetector::getSensitivePosition(){
-    return sensitivePosition;
-}
+std::string BaseDetector::getName() { return detectorName; }
 
-int BaseDetector::getSensitiveLength(){
-    return sensitiveLength;
-}
+int BaseDetector::getSensitivePosition() { return sensitivePosition; }
+
+int BaseDetector::getSensitiveLength() { return sensitiveLength; }
