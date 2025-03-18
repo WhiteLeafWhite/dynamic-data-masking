@@ -17,6 +17,7 @@
 #include "MysqlOperator.h"
 #include "PhoneDetector.h"
 #include "SensitiveFieldsManager.h"
+#include "AccountManager.h"
 
 // MySQL 连接配置
 constexpr const char* DB_HOST = "localhost";
@@ -27,14 +28,28 @@ constexpr unsigned int DB_PORT = 3306;
 
 // 配置文件
 constexpr const char* CONFIGURATIONPATH = "./mask-configuration";
+constexpr const char* ACCOUNT_INFO_PATH = "./mask-configuration";
 
 // 信息常量
 constexpr const char* SQL_INVALID = "查询无效！";
+constexpr const char* NOT_LOGIN_MESSAGE = "请先登录！";
+constexpr const char* LOGIN_FAIL = "登陆失败！";
+constexpr const char* LOGIN_SUCCESS = "登陆成功！您是：";
+
+std::string whoYouAre(int indexLevel){
+  if(indexLevel == 0) return "登陆成功！您是：普通用户";
+  else if(indexLevel == 1) return "登陆成功！您是：大师";
+  else return "登陆成功！您是：神奇人";
+}
 
 // 保护 MySQL 连接的互斥锁
 std::mutex db_mutex;
 
+//用户等级
+
 int level = 0;
+int isLogIn = false;
+AccountManager am(ACCOUNT_INFO_PATH);
 
 // 处理客户端消息的回调函数
 void on_read(struct bufferevent* bev, void* ctx) {
@@ -52,10 +67,29 @@ void on_read(struct bufferevent* bev, void* ctx) {
   std::cout << "Received message: " << client_message << std::endl;
 
   if (client_message == "1") {
-    level = 1;
+    level = 0;
     return;
   } else if (client_message == "0") {
     level = 0;
+    return;
+  }
+
+  if(client_message.substr(0,5) == "login"){
+    std::cout << "正在登陆：" << client_message << std::endl;
+    level = am.Login(client_message.substr(5));
+    if(level == -1){
+      isLogIn = false;
+      bufferevent_write(bev, LOGIN_FAIL, strlen(LOGIN_FAIL));
+    }
+    else{
+      isLogIn = true;
+      bufferevent_write(bev, whoYouAre(level).c_str(), whoYouAre(level).length());
+    }
+    return;
+  }
+
+  if(!isLogIn){
+    bufferevent_write(bev, NOT_LOGIN_MESSAGE, strlen(NOT_LOGIN_MESSAGE));
     return;
   }
 

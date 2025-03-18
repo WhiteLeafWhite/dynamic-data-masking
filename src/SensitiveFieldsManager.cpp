@@ -5,11 +5,13 @@
 #include "BaseMasking.h"
 #include "StarMasking.h"
 #include "EmailMasking.h"
+#include "DbTable.h"
 
 // 记得删掉
 #include <iostream>
 #include <string>
 #include <utility>
+#include <vector>
 
 const char* NORMAL_CONFIGURATION = "/normal-configuration.json";
 const char* MASTER_CONFIGURATION = "/master-configuration.json";
@@ -17,6 +19,7 @@ const char* EMAIL_MASKING = "EmailMasking";
 const char* ADDRESS_MASKING = "AddressMasking";
 const char* STAR_MASKING = "StarMasking";
 const char* NO_MASKING = "NoMasking";
+const char* TABLE_NAME = "tableName";
 const char* MASK = "mask";
 const char* TABLES = "tables";
 const char* FIELDS = "fields";
@@ -43,8 +46,11 @@ SensitiveFieldsManager::SensitiveFieldsManager(std::string configurationPath,
 
   // 检查文件是否成功打开
   if (!input_file.is_open()) {
-    std::cerr << "Failed to open file!" << std::endl;
+    std::cerr << "SensitiveManager: Failed to open file!" << std::endl;
     return;
+  }
+  else{
+    std::cout << "SensitiveManager: open file successfully!" << std::endl;
   }
 
   // 解析 JSON 文件
@@ -59,26 +65,35 @@ SensitiveFieldsManager::SensitiveFieldsManager(std::string configurationPath,
     json tables = configureJson[0][TABLES];
     for (auto table : tables) {
       json fields = table[FIELDS];
+      std::string tableName = table[TABLE_NAME];
+      //DbTable temp(tableName);
       for (auto field : fields) {
         fieldNames.push_back(field[FIELDNAME]);
+        std::string fieldName = field[FIELDNAME];
         if (field[MASK] == NO_MASKING) {
           maskSolution.insert(std::make_pair(field[FIELDNAME], nullptr));
+          //temp.addField(fieldName, new BaseMasking());
         } else if (field[MASK] == STAR_MASKING) {
           int parameter1 = field[PARAMETER][0];
           int parameter2 = field[PARAMETER][1];
           maskSolution.insert(std::make_pair(
               field[FIELDNAME], new StarMasking(parameter1, parameter2)));
+          //temp.addField(fieldName, new StarMasking(parameter1, parameter2));
         } else if (field[MASK] == ADDRESS_MASKING) {// 地址屏蔽
           int parameter1 = field[PARAMETER][0];
           maskSolution.insert(
               std::make_pair(field[FIELDNAME], new AddressMasking(parameter1)));
+          //temp.addField(fieldName, new AddressMasking(parameter1));
         } else if (field[MASK] == EMAIL_MASKING){// 邮箱屏蔽
           std::string parameter = field[PARAMETER][0];
           char parameter1 = parameter[0];
           maskSolution.insert(
             std::make_pair(field[FIELDNAME], new EmailMasking(parameter1)));
+          //temp.addField(fieldName, new EmailMasking(parameter1));
         }
       }
+      //std::cout<<"发现星星！"<<std::endl;
+      //DbTables.push_back(temp);
     }
   }
 }
@@ -91,20 +106,40 @@ bool SensitiveFieldsManager::generateSensitiveResult(std::string query) {
   hsql::SQLParser::parse(query, &result);
   bool ret = result.isValid();
   if (result.isValid()) {
+    bool isStarSelect = false;
     for (auto i = 0u; i < result.size(); ++i) {
       const hsql::SQLStatement* stmt = result.getStatement(i);
       if (stmt->isType(hsql::kStmtSelect)) {
         const hsql::SelectStatement* select_stmt =
             (const hsql::SelectStatement*)stmt;
-        if (select_stmt->selectList) {
+        if (select_stmt->selectList != nullptr) {
           for (auto* expr : *select_stmt->selectList) {
             if (expr->type == hsql::kExprColumnRef) {
               queryFields.push_back(expr->name);
             } else if (expr->type == hsql::kExprStar) {
-            } else {
+              isStarSelect = true;
+              std::cout<<"发现星星！"<<std::endl;
+              queryFields.push_back("pid");
+              queryFields.push_back("pname");
+              queryFields.push_back("pphone");
+              queryFields.push_back("paddress");
+              queryFields.push_back("pemail");
+            } else{
             }
           }  // for auto *expr : *select_stmt->selectList
         }    // if select_stmt->selectList
+        if(select_stmt -> fromTable != nullptr && isStarSelect){
+          if (select_stmt->fromTable->type == hsql::kTableName) {
+            std::string tableName = select_stmt->fromTable->name;
+            std::cout << "查询的表名: " << tableName << std::endl;
+            for(int i = 0; i < DbTables.size(); ++i){
+              if(DbTables[i].getTableName() == tableName){
+                std::cout<<"就是它！"<<std::endl;
+              }
+            }
+
+          }
+        }
       }      // if stmt->isType(hsql::kStmtSelect)
     }        //  for (auto i = 0u; i < result.size(); ++i)
   }          // if (result.isValid())

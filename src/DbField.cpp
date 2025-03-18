@@ -1,6 +1,11 @@
 // copyright 2025 Yanghaoyang
 
 #include "DbField.h"
+#include "BaseMasking.h"
+
+#include <iostream>
+
+DbField::DbField():maskSolution(nullptr){}
 
 DbField::DbField(const std::string &fn, const std::string &tn, BaseMasking* ms){
     fieldName = fn;
@@ -8,8 +13,14 @@ DbField::DbField(const std::string &fn, const std::string &tn, BaseMasking* ms){
     maskSolution = ms;
 }
 
+DbField::DbField(const DbField& other){
+    this->fieldName = other.fieldName;
+    this->tableName = other.tableName;
+    this->maskSolution = other.maskSolution;
+}
+
 DbField::~DbField(){
-    delete ms;
+    delete maskSolution;
 }
 
 std::string DbField::getFieldName(){

@@ -8,6 +8,7 @@
 
 #include "./json.hpp"
 #include "hsql/SQLParser.h"
+#include "DbTable.h"
 
 using json = nlohmann::json;
 
@@ -19,7 +20,7 @@ class SensitiveFieldsManager {
   std::map<std::string, BaseMasking*> maskSolution;
   std::vector<std::string> queryFields;
   std::vector<std::string> fieldNames;
-  sts::vector<int>
+  std::vector<DbTable> DbTables;
   json configureJson;
 
  public:
