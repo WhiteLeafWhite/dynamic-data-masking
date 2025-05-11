@@ -12,7 +12,7 @@
 
 #define CRYPTO_OPS_LIMIT crypto_pwhash_OPSLIMIT_MODERATE
 #define CRYPTO_MEM_LIMIT crypto_pwhash_MEMLIMIT_MODERATE
-#define HASH_LEN crypto_pwhash_BYTES // 推荐使用 32 字节哈希长度
+#define HASH_LEN crypto_pwhash_BYTES
 
 
 const char* ACCOUNT_CONFIGFILE_NAME = "/account-configuration.json";
@@ -82,13 +82,13 @@ int AccountManager::Login(const std::string &clientMessage){
   size_t userPos = clientMessage.find("username:");
   size_t passPos = clientMessage.find("password:");
 
-  // 计算 username 的起始位置和长度
-  size_t userStart = userPos + 9; // "username:" 的长度是9
+
+  size_t userStart = userPos + 9; // "username:"
   size_t userEnd = clientMessage.find(';', userStart);
   std::string username = clientMessage.substr(userStart, userEnd - userStart);
 
-  // 计算 password 的起始位置
-  size_t passStart = passPos + 9; // "password:" 的长度是9
+
+  size_t passStart = passPos + 9; // "password:"
   std::string password = clientMessage.substr(passStart);
 
   return this->Login(username, password);

@@ -19,6 +19,8 @@
 #include "SensitiveFieldsManager.h"
 #include "AccountManager.h"
 
+#define SEPPD_TEST
+
 // MySQL 连接配置
 constexpr const char* DB_HOST = "localhost";
 constexpr const char* DB_USER = "root";
@@ -67,10 +69,8 @@ void on_read(struct bufferevent* bev, void* ctx) {
   std::cout << "Received message: " << client_message << std::endl;
 
   if (client_message == "1") {
-    level = 0;
     return;
   } else if (client_message == "0") {
-    level = 0;
     return;
   }
 
@@ -111,6 +111,9 @@ void on_read(struct bufferevent* bev, void* ctx) {
 
   // 向客户端回显消息
   for (auto s : res) {
+    #ifndef SEPPD_TEST
+    std::cout<<std::endl;
+    #endif
     for (int i = 0; i < s.size(); ++i) {
       std::string temp = s[i];
       if (manager.isSensitive(i)) {
@@ -118,6 +121,9 @@ void on_read(struct bufferevent* bev, void* ctx) {
       }
       temp.push_back(' ');
       bufferevent_write(bev, temp.c_str(), temp.length());
+      #ifndef SEPPD_TEST
+      std::cout<<temp<<"#";
+      #endif
     }
     bufferevent_write(bev, "\n", 1);
   }
@@ -144,6 +150,9 @@ void on_accept(struct evconnlistener* listener, evutil_socket_t fd,
       bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
   bufferevent_setcb(bev, on_read, nullptr, on_event, nullptr);
   bufferevent_enable(bev, EV_READ | EV_WRITE);
+
+  std::cout<< "new client!"<<std::endl;
+
 }
 
 // 主函数：初始化服务端并监听端口

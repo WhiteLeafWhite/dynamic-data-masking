@@ -65,10 +65,6 @@ std::vector<std::vector<std::string> > MysqlOperator::execute(
         temp.push_back(std::string(row[i]));
       }
     }
-    for (auto i : temp) {
-      std::cout << i << " ";
-    }
-    std::cout << std::endl;
     ret.push_back(temp);
   }
 

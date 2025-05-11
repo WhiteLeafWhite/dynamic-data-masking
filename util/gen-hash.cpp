@@ -41,6 +41,8 @@ int main() {
     std::cout << "请输入密码: ";
     std::cin >> password;
 
+    password = "15197283215";
+
     std::string hashedPassword = hashPassword(password);
     std::cout << "存储的哈希密码: " << hashedPassword << std::endl;
 

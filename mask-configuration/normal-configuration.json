@@ -3,58 +3,60 @@
         "DataBaseName": "bisheInformation",
         "tables": [
             {
-                "tableName": "player",
+                "tableName": "studentInformation",
                 "fields": [
                     {
-                        "fieldName": "pphone",
+                        "fieldName": "sid",
+                        "mask": "NoMasking",
+                        "parameter": []
+                    },
+                    {
+                        "fieldName": "sname",
+                        "mask": "NoMasking",
+                        "parameter": []
+                    },
+                    {
+                        "fieldName": "sphone",
                         "mask": "StarMasking",
                         "parameter": [
                             3,
-                            4
+                            0
                         ]
                     },
                     {
-                        "fieldName": "pname",
-                        "mask": "NoMasking"
-                    },
-                    {
-                        "fieldName": "pid",
-                        "mask": "NoMasking"
-                    },
-                    {
-                        "fieldName": "paddress",
+                        "fieldName": "saddress",
                         "mask": "AddressMasking",
                         "parameter": [
-                            1
+                            2
                         ]
                     },
                     {
-                        "fieldName": "pemail",
+                        "fieldName": "semail",
                         "mask": "EmailMasking",
                         "parameter": [
                             "@"
                         ]
-                    }
-                ]
-            },
-            {
-                "tableName": "emergencyContactTable",
-                "fields": [
+                    },
                     {
-                        "fieldName": "emergencyPhone",
+                        "fieldName": "sps",
                         "mask": "StarMasking",
                         "parameter": [
-                            3,
-                            4
+                            5
                         ]
                     },
                     {
-                        "fieldName": "empid",
-                        "mask": "NoMasking"
+                        "fieldName": "sage",
+                        "mask": "GeneralizationMasking",
+                        "parameter": [
+                            5
+                        ]
                     },
                     {
-                        "fieldName": "pid",
-                        "mask": "NoMasking"
+                        "fieldName": "salary",
+                        "mask": "NoiseMasking",
+                        "parameter": [
+                            0.3
+                        ]
                     }
                 ]
             }

@@ -9,9 +9,12 @@ class StarMasking : public BaseMasking {
  private:
   int prefixLength;
   int suffixLength;
+  int starNum;
+  int mode;
 
  public:
   StarMasking();
+  StarMasking(int num);
   StarMasking(int pre, int suf);
   ~StarMasking();
 

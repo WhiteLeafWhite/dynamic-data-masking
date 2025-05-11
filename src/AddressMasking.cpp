@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+
+//级别越高屏蔽越多
 AddressMasking::AddressMasking() { maskLevel = 3; }
 
 AddressMasking::AddressMasking(int l) { maskLevel = l; }

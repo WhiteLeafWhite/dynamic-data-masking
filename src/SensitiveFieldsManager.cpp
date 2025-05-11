@@ -5,9 +5,12 @@
 #include "BaseMasking.h"
 #include "StarMasking.h"
 #include "EmailMasking.h"
+#include "GeneralizationMasking.h"
 #include "DbTable.h"
+#include "StructureMasking.h"
+#include "ReplaceMasking.h"
+#include "NoiseMasking.h"
 
-// 记得删掉
 #include <iostream>
 #include <string>
 #include <utility>
@@ -17,8 +20,12 @@ const char* NORMAL_CONFIGURATION = "/normal-configuration.json";
 const char* MASTER_CONFIGURATION = "/master-configuration.json";
 const char* EMAIL_MASKING = "EmailMasking";
 const char* ADDRESS_MASKING = "AddressMasking";
+const char* GENERALIZATION_MASKING = "GeneralizationMasking";
 const char* STAR_MASKING = "StarMasking";
 const char* NO_MASKING = "NoMasking";
+const char* STRUCTURE_MASKING = "StructureMasking";
+const char* REPLACE_MASKING = "ReplaceMasking";
+const char* NOISE_MASKING = "NoiseMasking";
 const char* TABLE_NAME = "tableName";
 const char* MASK = "mask";
 const char* TABLES = "tables";
@@ -74,10 +81,19 @@ SensitiveFieldsManager::SensitiveFieldsManager(std::string configurationPath,
           maskSolution.insert(std::make_pair(field[FIELDNAME], nullptr));
           //temp.addField(fieldName, new BaseMasking());
         } else if (field[MASK] == STAR_MASKING) {
-          int parameter1 = field[PARAMETER][0];
-          int parameter2 = field[PARAMETER][1];
-          maskSolution.insert(std::make_pair(
+          if(field[PARAMETER].size()==2){
+            int parameter1 = field[PARAMETER][0];
+            int parameter2 = field[PARAMETER][1];
+            maskSolution.insert(std::make_pair(
               field[FIELDNAME], new StarMasking(parameter1, parameter2)));
+          }else if(field[PARAMETER].size() == 1){
+            int parameter1 = field[PARAMETER][0];
+            maskSolution.insert(std::make_pair(
+              field[FIELDNAME], new StarMasking(parameter1)));
+          }else{
+            maskSolution.insert(std::make_pair(
+              field[FIELDNAME], new StarMasking()));
+          }
           //temp.addField(fieldName, new StarMasking(parameter1, parameter2));
         } else if (field[MASK] == ADDRESS_MASKING) {// 地址屏蔽
           int parameter1 = field[PARAMETER][0];
@@ -90,7 +106,32 @@ SensitiveFieldsManager::SensitiveFieldsManager(std::string configurationPath,
           maskSolution.insert(
             std::make_pair(field[FIELDNAME], new EmailMasking(parameter1)));
           //temp.addField(fieldName, new EmailMasking(parameter1));
+        } else if (field[MASK] == GENERALIZATION_MASKING){//范围模糊
+          int parameter1 = field[PARAMETER][0];
+          maskSolution.insert(
+            std::make_pair(field[FIELDNAME], new GeneralizationMasking(parameter1))
+          );
+        } else if (field[MASK] == STRUCTURE_MASKING){
+          std::string parameter1 = field[PARAMETER][0];
+          std::vector<std::string> indexs;
+          for(int i = 1;i<field[PARAMETER].size();++i){
+            indexs.push_back(field[PARAMETER][i]);
+          }
+          maskSolution.insert(
+            std::make_pair(field[FIELDNAME], new StructureMasking(parameter1, indexs))
+          );
+        } else if (field[MASK] == REPLACE_MASKING){
+          std::string parameter1 = field[PARAMETER][0];
+          maskSolution.insert(
+            std::make_pair(field[FIELDNAME], new ReplaceMasking(parameter1))
+          );
+        }else if (field[MASK] == NOISE_MASKING){
+          double parameter1 = field[PARAMETER][0];
+          maskSolution.insert(
+            std::make_pair(field[FIELDNAME], new NoiseMasking(parameter1))
+          );
         }
+        
       }
       //std::cout<<"发现星星！"<<std::endl;
       //DbTables.push_back(temp);
@@ -119,11 +160,14 @@ bool SensitiveFieldsManager::generateSensitiveResult(std::string query) {
             } else if (expr->type == hsql::kExprStar) {
               isStarSelect = true;
               std::cout<<"发现星星！"<<std::endl;
-              queryFields.push_back("pid");
-              queryFields.push_back("pname");
-              queryFields.push_back("pphone");
-              queryFields.push_back("paddress");
-              queryFields.push_back("pemail");
+              queryFields.push_back("sid");
+              queryFields.push_back("sname");
+              queryFields.push_back("sphone");
+              queryFields.push_back("saddress");
+              queryFields.push_back("semail");
+              queryFields.push_back("sps");
+              queryFields.push_back("sage");
+              queryFields.push_back("salary");
             } else{
             }
           }  // for auto *expr : *select_stmt->selectList
