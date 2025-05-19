@@ -1,0 +1,58 @@
+[
+    {
+        "DataBaseName": "bisheInformation",
+        "tables": [
+            {
+                "tableName": "studentInformation",
+                "fields": [
+                    {
+                        "fieldName": "sid",
+                        "mask": "NoMasking",
+                        "parameter": []
+                    },
+                    {
+                        "fieldName": "sname",
+                        "mask": "NoMasking",
+                        "parameter": []
+                    },
+                    {
+                        "fieldName": "sphone",
+                        "mask": "NoMasking",
+                        "parameter": []
+                    },
+                    {
+                        "fieldName": "saddress",
+                        "mask": "AddressMasking",
+                        "parameter": [
+                            2
+                        ]
+                    },
+                    {
+                        "fieldName": "semail",
+                        "mask": "NoMasking",
+                        "parameter": []
+                    },
+                    {
+                        "fieldName": "sps",
+                        "mask": "NoMasking",
+                        "parameter": []
+                    },
+                    {
+                        "fieldName": "sage",
+                        "mask": "GeneralizationMasking",
+                        "parameter": [
+                            5
+                        ]
+                    },
+                    {
+                        "fieldName": "salary",
+                        "mask": "GeneralizationMasking",
+                        "parameter": [
+                            5000
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

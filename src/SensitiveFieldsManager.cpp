@@ -18,6 +18,7 @@
 
 const char* NORMAL_CONFIGURATION = "/normal-configuration.json";
 const char* MASTER_CONFIGURATION = "/master-configuration.json";
+const char* _CONFIGURATION = "-configuration.json";
 const char* EMAIL_MASKING = "EmailMasking";
 const char* ADDRESS_MASKING = "AddressMasking";
 const char* GENERALIZATION_MASKING = "GeneralizationMasking";
@@ -40,16 +41,10 @@ SensitiveFieldsManager::SensitiveFieldsManager() {
 }
 
 SensitiveFieldsManager::SensitiveFieldsManager(std::string configurationPath,
-                                               int level) {
+                                               std::string level) {
   std::ifstream input_file;
 
-  if (level == NORMAL_USER_LEVEL) {
-    input_file.open(configurationPath + NORMAL_CONFIGURATION);
-  } else if (level == MASTER_LEVEL) {
-    input_file.open(configurationPath + MASTER_CONFIGURATION);
-  } else {
-    input_file.open(configurationPath + NORMAL_CONFIGURATION);
-  }
+  input_file.open(configurationPath + "/" + level + _CONFIGURATION);
 
   // 检查文件是否成功打开
   if (!input_file.is_open()) {

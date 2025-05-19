@@ -17,6 +17,7 @@ private:
 public:
     AccountManager() = default;
     AccountManager(const std::string &path);
-    int Login(const std::string &name, const std::string &password);
-    int Login(const std::string &clientMessage);
+    void re_readFile();
+    std::string Login(const std::string &name, const std::string &password);
+    std::string Login(const std::string &clientMessage);
 };

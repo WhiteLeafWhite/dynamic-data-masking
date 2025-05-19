@@ -36,12 +36,10 @@ constexpr const char* ACCOUNT_INFO_PATH = "./mask-configuration";
 constexpr const char* SQL_INVALID = "查询无效！";
 constexpr const char* NOT_LOGIN_MESSAGE = "请先登录！";
 constexpr const char* LOGIN_FAIL = "登陆失败！";
-constexpr const char* LOGIN_SUCCESS = "登陆成功！您是：";
+constexpr const char* LOGIN_SUCCESS = "登陆成功！";
 
-std::string whoYouAre(int indexLevel){
-  if(indexLevel == 0) return "登陆成功！您是：普通用户";
-  else if(indexLevel == 1) return "登陆成功！您是：大师";
-  else return "登陆成功！您是：神奇人";
+std::string whoYouAre(std::string indexLevel){
+  return LOGIN_SUCCESS + indexLevel;
 }
 
 // 保护 MySQL 连接的互斥锁
@@ -49,7 +47,7 @@ std::mutex db_mutex;
 
 //用户等级
 
-int level = 0;
+std::string level = "";
 int isLogIn = false;
 AccountManager am(ACCOUNT_INFO_PATH);
 
@@ -77,7 +75,7 @@ void on_read(struct bufferevent* bev, void* ctx) {
   if(client_message.substr(0,5) == "login"){
     std::cout << "正在登陆：" << client_message << std::endl;
     level = am.Login(client_message.substr(5));
-    if(level == -1){
+    if(level == "fail"){
       isLogIn = false;
       bufferevent_write(bev, LOGIN_FAIL, strlen(LOGIN_FAIL));
     }

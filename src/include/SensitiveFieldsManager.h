@@ -25,7 +25,7 @@ class SensitiveFieldsManager {
 
  public:
   SensitiveFieldsManager();
-  SensitiveFieldsManager(std::string configurationPath, int level);
+  SensitiveFieldsManager(std::string configurationPath, std::string level);
   ~SensitiveFieldsManager();
   bool generateSensitiveResult(std::string query);
   bool isSensitive(int index);

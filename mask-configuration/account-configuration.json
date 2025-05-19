@@ -3,12 +3,18 @@
         "username": "User",
         "password": "123456",
         "hashed-password": "$argon2id$v=19$m=262144,t=3,p=1$z4yqXGgHptVOjlph2X8q6g$NNYBA418QcRFtb9W5T/aE4gvNS0hWS1jguOhQY5Md7c",
-        "level": 0
+        "identity": "normal"
     },
     {
         "username": "Master",
         "password": "654321",
         "hashed-password": "$argon2id$v=19$m=262144,t=3,p=1$GV9WvA1iTi7iljDC9rAG2A$CxbKbV6E8tbc7nxLZ5i8x5VcVBd5vxvIuUbo4D+xwNo",
-        "level": 1
+        "identity": "master"
+    },
+    {
+        "username": "Detector",
+        "password": "654321",
+        "hashed-password": "$argon2id$v=19$m=262144,t=3,p=1$GV9WvA1iTi7iljDC9rAG2A$CxbKbV6E8tbc7nxLZ5i8x5VcVBd5vxvIuUbo4D+xwNo",
+        "identity": "detector"
     }
 ]
